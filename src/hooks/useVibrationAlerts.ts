@@ -36,8 +36,8 @@ export function useVibrationAlerts() {
     useEffect(() => {
         if (!isActive || !vibrationEnabled) return;
 
-        let hasAlertedEpi = false;
-        let hasAlertedPulse = false;
+        let lastAlertedEpiMsg = 0;
+        let lastAlertedPulseMsg = 0;
 
         const interval = setInterval(() => {
             const now = new Date().getTime();
@@ -46,12 +46,12 @@ export function useVibrationAlerts() {
             if (lastEpiTime) {
                 const timeSinceEpi = now - lastEpiTime.getTime();
                 if (timeSinceEpi >= epiIntervalMs) {
-                    if (!hasAlertedEpi) {
+                    if (now - lastAlertedEpiMsg >= 5000) { // repeat every 5s
                         triggerAlert("epi");
-                        hasAlertedEpi = true;
+                        lastAlertedEpiMsg = now;
                     }
                 } else {
-                    hasAlertedEpi = false;
+                    lastAlertedEpiMsg = 0;
                 }
             }
 
@@ -59,12 +59,12 @@ export function useVibrationAlerts() {
             if (lastPulseCheckTime) {
                 const timeSincePulse = now - lastPulseCheckTime.getTime();
                 if (timeSincePulse >= pulseIntervalMs) {
-                    if (!hasAlertedPulse) {
+                    if (now - lastAlertedPulseMsg >= 5000) { // repeat every 5s
                         triggerAlert("pulse");
-                        hasAlertedPulse = true;
+                        lastAlertedPulseMsg = now;
                     }
                 } else {
-                    hasAlertedPulse = false;
+                    lastAlertedPulseMsg = 0;
                 }
             }
         }, 1000);
