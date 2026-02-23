@@ -18,7 +18,9 @@ export function ActiveCodeScreen() {
         toggleCompressions,
         undoLastEvent,
         lockMode,
-        setLockMode
+        setLockMode,
+        epiIntervalMs,
+        pulseIntervalMs
     } = useCodeSession();
 
     const [now, setNow] = useState(new Date());
@@ -60,8 +62,8 @@ export function ActiveCodeScreen() {
     const pulseTimeStr = formatTimer(lastPulseCheckTime, now);
     const shockTimeStr = formatTimer(lastShockTime, now);
 
-    const isEpiDue = lastEpiTime && (now.getTime() - lastEpiTime.getTime() >= 3 * 60 * 1000); // Highlight red if due
-    const isPulseDue = lastPulseCheckTime && (now.getTime() - lastPulseCheckTime.getTime() >= 2 * 60 * 1000);
+    const isEpiDue = lastEpiTime && (now.getTime() - lastEpiTime.getTime() >= epiIntervalMs); // Highlight red if due
+    const isPulseDue = lastPulseCheckTime && (now.getTime() - lastPulseCheckTime.getTime() >= pulseIntervalMs);
 
     return (
         <div className="flex flex-col h-[100dvh] max-w-md mx-auto bg-slate-900 overflow-hidden relative">

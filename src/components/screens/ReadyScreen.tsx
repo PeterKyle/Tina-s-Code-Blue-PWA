@@ -2,10 +2,16 @@ import { useState } from "react";
 import { useCodeSession } from "../../store/useCodeSession";
 import { Settings as SettingsIcon, ShieldAlert } from "lucide-react";
 import { SettingsModal } from "../modals/SettingsModal";
+import { initAudioContext } from "../../hooks/useVibrationAlerts";
 
 export function ReadyScreen() {
     const { startCode } = useCodeSession();
     const [showSettings, setShowSettings] = useState(false);
+
+    const handleStartCode = () => {
+        initAudioContext();
+        startCode();
+    };
 
     return (
         <div className="flex flex-col h-screen max-w-md mx-auto relative p-4 bg-slate-900">
@@ -25,7 +31,7 @@ export function ReadyScreen() {
 
             <div className="flex-1 flex flex-col items-center justify-center">
                 <button
-                    onClick={startCode}
+                    onClick={handleStartCode}
                     className="w-64 h-64 rounded-full bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold text-3xl shadow-[0_0_40px_rgba(220,38,38,0.4)] transition-all transform active:scale-95 border-4 border-red-400/30 flex items-center justify-center"
                 >
                     START CODE
