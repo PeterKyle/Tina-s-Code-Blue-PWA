@@ -5,6 +5,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import path from 'path'
 
 export default defineConfig({
+  base: '/Tina-s-Code-Blue-PWA/',
   server: {
     host: true, // Listen on all local IPs
   },
@@ -24,8 +25,8 @@ export default defineConfig({
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',
-        start_url: '/',
-        scope: '/',
+        start_url: '/Tina-s-Code-Blue-PWA/',
+        scope: '/Tina-s-Code-Blue-PWA/',
         icons: [
           {
             src: 'icon.svg',
