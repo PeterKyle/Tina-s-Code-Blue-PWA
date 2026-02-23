@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useCodeSession } from "../../store/useCodeSession";
 import { Timeline } from "../Timeline";
 import { format } from "date-fns";
-import { Activity, Syringe, Zap, Undo2, Lock, Unlock, CheckCircle2 } from "lucide-react";
+import { Activity, Syringe, Zap, Undo2, Lock, Unlock, CheckCircle2, ShieldAlert } from "lucide-react";
 import { EventModal } from "../modals/EventModal";
 
 export function ActiveCodeScreen() {
@@ -20,7 +20,8 @@ export function ActiveCodeScreen() {
         lockMode,
         setLockMode,
         epiIntervalMs,
-        pulseIntervalMs
+        pulseIntervalMs,
+        alertToast
     } = useCodeSession();
 
     const [now, setNow] = useState(new Date());
@@ -96,6 +97,14 @@ export function ActiveCodeScreen() {
                     </button>
                 </div>
             </div>
+
+            {/* TOAST ALERT */}
+            {alertToast && (
+                <div className="bg-red-600 border-b border-red-500 px-4 py-2 flex items-center justify-center gap-2 animate-in slide-in-from-top-4 fade-in duration-300 z-50 shadow-lg">
+                    <ShieldAlert className="w-5 h-5 text-white animate-pulse" />
+                    <span className="font-bold text-white tracking-wide uppercase text-sm drop-shadow-sm">{alertToast}</span>
+                </div>
+            )}
 
             {/* TIMERS ROW */}
             <div className="grid grid-cols-3 gap-2 p-3">

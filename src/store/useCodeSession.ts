@@ -42,6 +42,7 @@ interface CodeSessionState {
     epiIntervalMs: number;
     pulseIntervalMs: number;
     lockMode: boolean;
+    alertToast: string | null;
 
     // Actions
     startCode: () => void;
@@ -54,6 +55,8 @@ interface CodeSessionState {
     setVibrationEnabled: (enabled: boolean) => void;
     setLockMode: (locked: boolean) => void;
     updateSettings: (epiMins: number, pulseMins: number) => void;
+    showToast: (msg: string) => void;
+    hideToast: () => void;
 }
 
 export const useCodeSession = create<CodeSessionState>((set, get) => ({
@@ -74,6 +77,7 @@ export const useCodeSession = create<CodeSessionState>((set, get) => ({
     epiIntervalMs: 3 * 60 * 1000, // 3 mins default
     pulseIntervalMs: 2 * 60 * 1000, // 2 mins default
     lockMode: false,
+    alertToast: null,
 
     startCode: () => {
         const now = new Date();
@@ -313,4 +317,6 @@ export const useCodeSession = create<CodeSessionState>((set, get) => ({
         epiIntervalMs: epiMins * 60 * 1000,
         pulseIntervalMs: pulseMins * 60 * 1000
     }),
+    showToast: (msg) => set({ alertToast: msg }),
+    hideToast: () => set({ alertToast: null }),
 }));

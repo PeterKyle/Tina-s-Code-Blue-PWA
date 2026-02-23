@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useCodeSession } from '../store/useCodeSession';
+import { vibratePattern, isVibrationSupported } from '../utils/vibration';
 
 let globalAudioCtx: any = null;
 
@@ -30,11 +31,16 @@ export function useVibrationAlerts() {
         lastEpiTime,
         epiIntervalMs,
         lastPulseCheckTime,
-        pulseIntervalMs
+        pulseIntervalMs,
+        showToast,
+        hideToast
     } = useCodeSession();
 
     useEffect(() => {
-        if (!isActive || !vibrationEnabled) return;
+        if (!isActive || !vibrationEnabled) {
+            hideToast();
+            return;
+        }
 
         let lastAlertedEpiMsg = 0;
         let lastAlertedPulseMsg = 0;
@@ -66,6 +72,10 @@ export function useVibrationAlerts() {
                 } else {
                     lastAlertedPulseMsg = 0;
                 }
+            }
+
+            if (!lastAlertedEpiMsg && !lastAlertedPulseMsg) {
+                hideToast();
             }
         }, 1000);
 
@@ -102,15 +112,23 @@ export function useVibrationAlerts() {
     };
 
     const triggerAlert = (type: "epi" | "pulse") => {
-        const canVibrate = 'vibrate' in navigator;
+        const canVibrate = isVibrationSupported();
 
         if (type === "epi") {
-            if (canVibrate) navigator.vibrate([500, 200, 500, 200, 500]);
+            if (canVibrate) {
+                vibratePattern([500, 200, 500, 200, 500]);
+            } else {
+                showToast("EPI DUE: Administer Epinephrine!");
+            }
             playBeep(440, 500); // Beep A4
             setTimeout(() => playBeep(440, 500), 700);
             setTimeout(() => playBeep(440, 500), 1400);
         } else {
-            if (canVibrate) navigator.vibrate([300, 100, 300]);
+            if (canVibrate) {
+                vibratePattern([300, 100, 300]);
+            } else {
+                showToast("PULSE CHECK OVERDUE!");
+            }
             playBeep(600, 300); // Higher pitch for pulse
             setTimeout(() => playBeep(600, 300), 400);
         }
